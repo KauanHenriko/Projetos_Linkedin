@@ -7,7 +7,7 @@ COMPARTMENT_OCID=#"# INSIRA AQUI O OCID DO SEU COMPARTIMENTO"
 RATE_PER_GB="# VALOR DO CUSTO POR GB DO BACKUP"
 
 GRAND_TOTAL_BKP=0
-GRAND_TOTAL_CUSTO=0.00
+GRAND_TOTAL_CUSTO=0.0 #INSIRA AQUI O VALOR QUE VOCÊ PAGA PELOS BACKUPS  GB/MÊS 
 
 echo "-------------------------------------------------------------------------------------------------"
 printf "%-35s | %-21s | %-30s |\n" "Nome da instacia" "TOTAL DE GB DE BACKUP" "CUSTO TOTAL DOS GB DE BACKUP"
@@ -36,7 +36,6 @@ while IFS="|" read -r INSTANCE_OCID INSTANCE_NAME INSTANCE_AD; do
 
     if [ -n "$BLOCK_VOLUME_IDS" ]; then
         for VOL_ID in $BLOCK_VOLUME_IDS; do
-            # AQUI ESTAVA O ERRO! COMANDO CORRIGIDO PARA: oci bv backup list
             BKP_JSON=$(oci bv backup list --volume-id "$VOL_ID" --compartment-id "$COMPARTMENT_OCID" --all 2>/dev/null)
             BLOCK_BKP_SIZE=$(echo "$BKP_JSON" | jq -r '[.data[]? | (."unique-size-in-gbs" // 0) | tonumber] | add // 0' 2>/dev/null)
             
